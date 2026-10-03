@@ -50,12 +50,26 @@
 
 /* Retrato integrado en la portada. La fotografía original permanece intacta. */
 .hero-layout{display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:65px}
-.hero .hero-photo{width:80%;filter:blur(9px);transform:scale(1.05);opacity:.72}
+.hero .hero-photo{width:80%;filter:blur(9px);transform:scale(1.05);opacity:.936}
 .hero:after{background:linear-gradient(90deg,#faf9f6 0%,rgba(250,249,246,.96) 27%,rgba(250,249,246,.52) 57%,rgba(250,249,246,.15) 100%)}
 .portrait-composition{position:relative;width:100%;max-width:445px;margin:45px 0 45px auto;padding:12px;isolation:isolate}
 .portrait-halo{position:absolute;z-index:-2;inset:-25px;background:radial-gradient(ellipse at 65% 30%,rgba(211,165,110,.53),transparent 68%),radial-gradient(ellipse at 20% 80%,rgba(103,146,175,.32),transparent 65%);filter:blur(25px);border-radius:30%}
-.portrait-frame{position:relative;border:1px solid rgba(255,255,255,.85);padding:9px;background:rgba(255,255,255,.34);backdrop-filter:blur(18px);border-radius:20px;box-shadow:0 22px 65px rgba(68,51,29,.17),0 0 0 1px rgba(130,105,73,.07);isolation:isolate}
-.portrait-glow-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(26px) saturate(1.15);opacity:.35;z-index:-1;border-radius:22px}
-.portrait-photo{position:relative;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:12px;box-shadow:0 1px 8px rgba(0,0,0,.1)}
+.portrait-frame{position:relative;display:block;border:1px solid rgba(255,255,255,.19);padding:3px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);border-radius:18px;box-shadow:0 14px 42px rgba(68,51,29,.12),0 0 28px rgba(255,237,206,.28);isolation:isolate}
+.portrait-glow-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(26px) saturate(1.15);opacity:.15;z-index:-1;border-radius:22px}
+.portrait-photo{position:relative;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:14px;box-shadow:none}
 @media(max-width:1000px){.hero-layout{gap:28px;grid-template-columns:1.05fr 1fr}.portrait-composition{padding:5px;max-width:380px}.hero h1{font-size:clamp(54px,7.7vw,78px)}}
-@media(max-width:640px){.hero{min-height:0}.hero-layout{display:flex;flex-direction:column;align-items:stretch;gap:0}.hero-copy{padding:42px 0 0}.hero h1{font-size:62px}.portrait-composition{width:100%;max-width:370px;margin:29px auto 39px;padding:6px}.portrait-frame{padding:7px;border-radius:18px}.portrait-photo{border-radius:11px}.portrait-halo{inset:-8px;filter:blur(22px)}.hero .hero-photo{width:100%;height:470px;top:auto;bottom:0;left:0;filter:blur(7px);opacity:.8;object-position:67% 50%}.hero:after{background:linear-gradient(180deg,#faf9f6 0%,#faf9f6 34%,rgba(250,249,246,.65) 56%,rgba(250,249,246,.22) 100%)} }
+@media(max-width:640px){.hero{min-height:0}.hero-layout{display:flex;flex-direction:column;align-items:stretch;gap:0}.hero-copy{padding:42px 0 0}.hero h1{font-size:62px}.portrait-composition{width:100%;max-width:300px;margin:29px auto 30px;padding:4px}.portrait-frame{padding:3px;border-radius:17px}.portrait-photo{border-radius:13px}.portrait-halo{inset:-8px;filter:blur(22px)}.hero .hero-photo{width:100%;height:470px;top:auto;bottom:0;left:0;filter:blur(7px);opacity:1;object-position:67% 50%}.hero:after{background:linear-gradient(180deg,#faf9f6 0%,#faf9f6 34%,rgba(250,249,246,.65) 56%,rgba(250,249,246,.22) 100%)} }
+
+/* Enlaces sociales y marco suave del retrato. */
+.portrait-instagram{transition:box-shadow .25s,transform .25s}
+.portrait-instagram:hover{transform:translateY(-3px);box-shadow:0 18px 45px rgba(68,51,29,.15),0 0 36px rgba(255,238,210,.4)}
+.portrait-caption{display:flex;flex-direction:column;align-items:center;gap:0;margin:14px 0 0;text-align:center}
+.instagram-handle{display:inline-flex;align-items:center;gap:8px;min-height:40px;font-size:13px;font-weight:500;letter-spacing:.025em;color:#344b5c;transition:color .2s}
+.instagram-handle .icon{width:17px;height:17px;stroke-width:1.5}
+.instagram-handle:hover{color:#171717}
+.portrait-caption-note{font-size:11px;color:#565b60;letter-spacing:.045em}
+.whatsapp-contact{display:inline-flex;align-items:center;gap:8px;font-size:13px;min-height:44px;color:#386587}
+.whatsapp-contact .icon{width:19px;height:19px;stroke-width:1.35}
+.whatsapp-contact[aria-disabled="true"]{cursor:default}
+.whatsapp-contact[href]:hover{color:#294e69}
+@media(max-width:640px){.portrait-caption{margin-top:9px}.instagram-handle{font-size:12px;min-height:38px}.portrait-caption-note{font-size:10px}.whatsapp-contact{width:36px;justify-content:center}.whatsapp-contact span{display:none}.nav-side{gap:0}.portrait-halo{opacity:.65}.brand img{width:118px}}

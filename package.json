@@ -1,0 +1,22 @@
+{
+  "name": "aromas-by-pikin",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n WEB,API \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
+    "build": "npm run build --workspace frontend",
+    "start": "npm run start --workspace backend",
+    "check": "node --check backend/src/app.js && node --check backend/src/server.js && node --check backend/src/db.js && node --check frontend/src/main.js && node --check backend/src/migrate.js && node --check frontend/vite.config.js",
+    "db:migrate": "npm run db:migrate --workspace backend"
+  },
+  "devDependencies": {
+    "concurrently": "10.0.5"
+  }
+}

@@ -9,8 +9,8 @@ document.querySelector('#search-toggle').addEventListener('click',()=>{document.
 const menu=document.querySelector('#menu'),nav=document.querySelector('#nav');function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Abrir menú')}menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú')});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{closeMenu();nav.querySelectorAll('a').forEach(n=>n.classList.toggle('active',n===a))}));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
 const dialog=document.querySelector('#detail');document.querySelectorAll('[data-detail]').forEach(b=>b.addEventListener('click',()=>{const p=products[Number(b.dataset.detail)];document.querySelector('#detail-title').textContent=p.name;document.querySelector('#detail-family').textContent=p.family;document.querySelector('#detail-description').textContent=p.description;document.querySelector('#detail-image').style.setProperty('--pos',p.pos);dialog.showModal()}));document.querySelector('#close-detail').onclick=()=>dialog.close();document.querySelector('#back-catalog').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 
-// Contacto público. Configurar VITE_WHATSAPP_NUMBER con código de país, sin +.
-const whatsappNumber = (import.meta.env.VITE_WHATSAPP_NUMBER || '').replace(/[\s()+-]/g, '');
+// Número comercial público, con opción de configuración por entorno.
+const whatsappNumber = (import.meta.env.VITE_WHATSAPP_NUMBER || '18296651314').replace(/[\s()+-]/g, '');
 const whatsappMessage = 'Hola estoy interesado en comprar un perfume, vengo de tu pagina';
 if (/^[1-9]\d{7,14}$/.test(whatsappNumber)) {
   document.querySelectorAll('[data-whatsapp]').forEach(link => {

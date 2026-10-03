@@ -1,3 +1,4 @@
+import {fileURLToPath} from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,12 +8,12 @@ import { getPool } from './db.js';
 import { adminGuard } from './auth.js';
 import { baseSelect,categoryInput,productInput,parse,uuid,failure,getProduct,saveProduct } from './catalog.js';
 const listInput=z.object({q:z.string().trim().max(150).default(''),category:z.string().max(80).default(''),family:z.string().max(100).default(''),brand:z.string().max(100).default(''),sort:z.enum(['selection','az','za','price_asc','price_desc']).default('selection'),page:z.coerce.number().int().min(1).max(10000).default(1),limit:z.coerce.number().int().min(1).max(60).default(12),featured:z.enum(['true','false']).default('false')});
-export function createApp({poolProvider=getPool,verifyUser}={}){
- const app=express();const origin=process.env.FRONTEND_ORIGIN||'http://localhost:5173';
- if(process.env.NODE_ENV==='production'&&!process.env.FRONTEND_ORIGIN)throw new Error('FRONTEND_ORIGIN obligatorio.');
+export function createApp({poolProvider=getPool,verifyUser,serveFrontend=process.env.SERVE_FRONTEND==='true'}={}){
+ const app=express();const origin=process.env.FRONTEND_ORIGIN||process.env.RENDER_EXTERNAL_URL||'http://localhost:5173';
+ if(process.env.NODE_ENV==='production'&&!process.env.FRONTEND_ORIGIN&&!process.env.RENDER_EXTERNAL_URL)throw new Error('FRONTEND_ORIGIN obligatorio.');
  // Solo activar con el número real de proxies confiables del hosting.
  if(process.env.TRUST_PROXY_HOPS)app.set('trust proxy',Number(process.env.TRUST_PROXY_HOPS));
- app.disable('x-powered-by');app.use(helmet());app.use(cors({origin,methods:['GET','POST','PUT'],credentials:false}));
+ app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:{directives:{connectSrc:["'self'",...(process.env.SUPABASE_URL?[new URL(process.env.SUPABASE_URL).origin]:[])],imgSrc:["'self'",'data:','https:'],upgradeInsecureRequests:process.env.NODE_ENV==='production'?[]:null}}}));app.use(cors({origin,methods:['GET','POST','PUT'],credentials:false}));
  app.use(express.json({limit:'64kb'}));app.use('/api',rateLimit({windowMs:60000,limit:180,standardHeaders:'draft-8',legacyHeaders:false}));
  const db=()=>{const pool=poolProvider();if(!pool)throw failure(503,'DATABASE_NOT_CONFIGURED','La base de datos todavía no está configurada.');return pool;};
  app.get('/api/health',(_req,res)=>res.json({status:'ok',service:'aromas-api'}));
@@ -40,6 +41,11 @@ export function createApp({poolProvider=getPool,verifyUser}={}){
  app.get('/api/admin/products/:id',async(req,res)=>res.json({product:await getProduct(db(),parse(uuid,req.params.id),true)}));
  app.post('/api/admin/products',async(req,res)=>res.status(201).json({product:await saveProduct(db(),null,parse(productInput,req.body))}));
  app.put('/api/admin/products/:id',async(req,res)=>res.json({product:await saveProduct(db(),parse(uuid,req.params.id),parse(productInput,req.body))}));
+ if(serveFrontend){
+  const dist=fileURLToPath(new URL('../../frontend/dist/',import.meta.url));
+  app.get('/',(_req,res)=>res.redirect(302,'/inicio/'));
+  app.use(express.static(dist,{dotfiles:'deny',index:'index.html'}));
+ }
  app.use((_req,res)=>res.status(404).json({code:'NOT_FOUND'}));
  app.use((err,_req,res,_next)=>{
   if(err.type==='entity.parse.failed')return res.status(400).json({code:'INVALID_JSON',message:'JSON inválido.'});

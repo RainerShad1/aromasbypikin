@@ -3,6 +3,7 @@ const { Pool } = pg;
 let pool;
 export function getPool() {
   if (!process.env.DATABASE_URL) return null;
+  if (!/^postgres(?:ql)?:\/\//.test(process.env.DATABASE_URL)) throw new Error('DATABASE_URL debe empezar por postgresql://. Copia Session pooler desde Supabase Connect; la URL HTTPS es SUPABASE_URL.');
   if (!pool) {
     const useTls = process.env.DATABASE_SSL !== 'false';
     pool = new Pool({

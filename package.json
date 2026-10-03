@@ -13,10 +13,13 @@
     "dev": "concurrently -k -n WEB,API \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
     "build": "npm run build --workspace frontend",
     "start": "npm run start --workspace backend",
-    "check": "node --check backend/src/app.js && node --check backend/src/server.js && node --check backend/src/db.js && node --check frontend/src/main.js && node --check backend/src/migrate.js && node --check frontend/vite.config.js",
-    "db:migrate": "npm run db:migrate --workspace backend"
+    "check": "node scripts/check.mjs",
+    "db:migrate": "npm run db:migrate --workspace backend",
+    "db:bundle": "node scripts/build-sql.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "concurrently": "10.0.5"
   }
 }

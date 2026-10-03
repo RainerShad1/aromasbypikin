@@ -11,6 +11,6 @@ GitHub guarda el historial del código. Los proveedores de hosting ejecutan el f
 
 Variables del backend: `NODE_ENV=production`, `FRONTEND_ORIGIN` con el origen exacto del frontend (sin barra final), `DATABASE_URL` y configuración TLS. CORS no sustituye la autenticación de administradores.
 
-El frontend tendrá `VITE_API_URL` apuntando al backend al implementar la integración. Las variables VITE_ son públicas y se fijan al compilar.
+El frontend usa `VITE_API_URL` apuntando al backend. Configura además `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY`; el backend requiere `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`. Las variables VITE_ son públicas y se fijan al compilar.
 
 Se puede elegir cada proveedor por separado sin cambiar esta organización. La selección, las cuentas y el despliegue se harán después; esta entrega no configura ningún servicio de pago ni publica el sitio.

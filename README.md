@@ -6,13 +6,13 @@ Base inicial de la tienda y catálogo de perfumes. Un único repositorio para fr
 
 Primera versión: catálogo, carrito, compra sin cuenta y pedido por WhatsApp. Guardaremos el cliente y el pedido en PostgreSQL antes de ofrecer abrir WhatsApp. Abrir WhatsApp no demuestra que el mensaje se haya enviado ni que el pedido esté confirmado: el negocio confirmará disponibilidad y entrega.
 
-## Estado de esta entrega — base 0.1
+## Estado de esta entrega — fase 2
 
-**Ya incluido:** diseño aprobado con logo, retrato y fondo de perfumes desenfocado; HTML, CSS, JavaScript, imágenes y fuentes separados para trabajar cómodamente; buscador y filtros sobre perfumes ilustrativos; fichas visuales; servidor API; conexión PostgreSQL configurable; migración inicial; archivos de ejemplo de configuración; comandos de desarrollo y compilación; revisión automática en GitHub.
+Catálogo real con categorías, presentaciones, precios y existencias; administración protegida en `/admin/` con Supabase Auth. La base inicia vacía, con cinco categorías. Ya no se muestran perfumes ficticios.
 
-**Todavía no implementado:** conexión del catálogo visual a los productos reales, carrito, checkout, guardado de clientes/pedidos, enlace WhatsApp del pedido, autenticación del administrador, panel de gestión, control transaccional de existencias y despliegue. El esquema prepara esas funciones; no las activa. La lista de productos del frontend es ilustrativa y no viene de la base de datos.
+**Empieza por [la guía paso a paso de Supabase](docs/SUPABASE-PASO-A-PASO.md)**. El SQL para pegar en SQL Editor está en `database/INSTALAR-EN-SUPABASE.sql`.
 
-No se creó una cuenta de nube, una base remota ni un repositorio GitHub. No hay credenciales reales en esta carpeta.
+Todavía faltan carrito, checkout, registro/gestión de pedidos y despliegue. Crear el proyecto de Supabase, aplicar el SQL y configurar las variables son pasos que debe completar el propietario. No hay secretos reales en el repositorio.
 
 ## Carpetas
 
@@ -44,7 +44,7 @@ npm run dev
 - Página: http://localhost:5173
 - API: http://localhost:3001/api/health
 
-El diseño y la API básica arrancan sin base de datos. Para detener ambos, presiona Ctrl+C. No abras `frontend/index.html` con doble clic: esta versión de desarrollo usa Vite; el HTML independiente anterior sí puede abrirse directamente.
+El diseño y la API básica arrancan sin base de datos, pero el catálogo necesita la conexión real y el panel necesita Supabase Auth. Para detener ambos, presiona Ctrl+C. No abras `frontend/index.html` con doble clic: esta versión de desarrollo usa Vite; el HTML independiente anterior sí puede abrirse directamente.
 
 Opcionalmente, copia los ejemplos de configuración en PowerShell:
 
@@ -53,7 +53,7 @@ Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
 ```
 
-Los ejemplos contienen instrucciones, no contraseñas reales. La variable `VITE_API_URL` queda reservada para la integración del catálogo; todavía no se usa en el prototipo visual.
+Los ejemplos contienen instrucciones, no contraseñas reales. `VITE_API_URL=/api` usa el proxy de Vite al backend local. En la nube configura la URL HTTPS de la API.
 
 ## 3. Conectar PostgreSQL cuando lo configuremos
 
@@ -76,30 +76,23 @@ Rutas iniciales:
 |---|---|
 | `GET /api/health` | Confirma que el servidor está encendido. |
 | `GET /api/ready` | Comprueba conexión a la base. Devuelve 503 si falta configuración o conexión. |
-| `GET /api/products` | Devuelve hasta 100 productos publicados. Requiere base y migración. |
+| `GET /api/products` | Devuelve productos publicados con filtros y paginación. Requiere base y migraciones. |
 
-No existen rutas para leer clientes o pedidos, ni para registrarlos todavía. No cambies el frontend a datos reales hasta completar esa integración.
+No existen rutas para leer clientes o pedidos, ni para registrarlos todavía. El catálogo ya utiliza los productos de PostgreSQL.
 
-## 4. Preparar Git y GitHub
+## 4. Actualizar desde GitHub
 
-El ZIP no incluye una carpeta `.git`; inicializa el repositorio en tu computadora, dentro de `aromas-by-pikin`:
+Repositorio: https://github.com/RainerShad1/aromasbypikin
 
-```powershell
-git init -b main
-git add .
-git commit -m "Base inicial de Aromas By Pikin"
-```
-
-Crea un repositorio vacío en GitHub, preferiblemente privado mientras lo desarrollamos. No añadas un README desde GitHub porque ya viene uno. Usa la URL que GitHub te muestre:
+Después de integrar la propuesta de cambios en GitHub, actualiza tu copia local:
 
 ```powershell
-git remote add origin URL_DE_TU_REPOSITORIO
-git push -u origin main
+git switch main
+git pull --ff-only
+npm ci
 ```
 
-Sustituye `URL_DE_TU_REPOSITORIO` por la URL real. Si Git pide nombre/correo, configúralos con tus propios datos.
-
-Para próximos cambios:
+Si tienes cambios locales sin guardar, revísalos y haz un commit antes de actualizar. Para próximos cambios:
 
 ```powershell
 git status
@@ -108,7 +101,7 @@ git commit -m "Describe el cambio realizado"
 git push
 ```
 
-Revisa `git status` antes de cada commit. `.gitignore` excluye `.env`, dependencias, compilados y archivos de claves. Mantén los ejemplos `.env.example` sin valores reales. Si una contraseña se publica accidentalmente, eliminarla del archivo no la elimina del historial: hay que revocarla.
+Revisa `git status` antes de cada commit. `.gitignore` excluye `.env`, dependencias, compilados y archivos de claves. Mantén los ejemplos `.env.example` sin valores reales.
 
 ## 5. Comprobar y compilar
 
@@ -119,4 +112,4 @@ npm run build
 
 La compilación genera `frontend/dist`. No se sube esa carpeta a GitHub: el proveedor la genera al desplegar. Conserva `package-lock.json`, que fija las versiones instaladas. `npm start` arranca solo el backend para un servicio de nube.
 
-La comprobación inicial revisa sintaxis y compilación; no es una prueba completa de una tienda ni de la base remota. Ver `docs/ESTADO-Y-PROXIMOS-PASOS.md`.
+Ejecuta `npm test` para probar esquema, API y permisos en PostgreSQL embebido. El login contra tu proyecto de Supabase requiere configurar el entorno real. Ver `docs/ESTADO-Y-PROXIMOS-PASOS.md`.
